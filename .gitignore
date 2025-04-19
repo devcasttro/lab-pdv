@@ -1,0 +1,32 @@
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Banco de dados local
+*.db
+*.sqlite3
+
+# Logs e backups
+*.log
+*.bak
+*.tmp
+
+# PDFs gerados (ex: recibos)
+*.pdf
+
+# Configurações do VSCode
+.vscode/
+
+# Arquivos temporários
+*.swp
