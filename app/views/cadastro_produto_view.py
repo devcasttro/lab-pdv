@@ -1,22 +1,28 @@
 import flet as ft
 from services.theme_service import get_theme_colors
-from models.produto_model import adicionar_produto
+from models.produto_model import adicionar_produto, editar_produto, Produto
 
 
-def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar):
+def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: Produto = None):
     tema = get_theme_colors("escuro" if page.session.get("tema_escuro") else "claro")
 
     # Campos do formulário
-    nome = ft.TextField(label="Nome do Produto", expand=True)
-    codigo_barras = ft.TextField(label="Código de Barras", expand=True, keyboard_type=ft.KeyboardType.NUMBER)
-    preco = ft.TextField(label="Preço de Venda (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER)
-    custo = ft.TextField(label="Custo de Aquisição (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER)
-    estoque = ft.TextField(label="Estoque Atual", expand=True, keyboard_type=ft.KeyboardType.NUMBER)
-    estoque_minimo = ft.TextField(label="Estoque Mínimo", expand=True, keyboard_type=ft.KeyboardType.NUMBER)
+    nome = ft.TextField(label="Nome do Produto", expand=True, value=produto.nome if produto else "")
+    codigo_barras = ft.TextField(label="Código de Barras", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+                                 value=produto.codigo_barras if produto else "")
+    preco = ft.TextField(label="Preço de Venda (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+                         value=str(produto.preco) if produto else "")
+    custo = ft.TextField(label="Custo de Aquisição (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+                         value=str(produto.custo) if produto else "")
+    estoque = ft.TextField(label="Estoque Atual", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+                           value=str(produto.estoque) if produto else "")
+    estoque_minimo = ft.TextField(label="Estoque Mínimo", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+                                  value=str(produto.estoque_minimo) if produto else "")
     unidade = ft.Dropdown(
         label="Unidade",
         options=[ft.dropdown.Option(u) for u in ["un", "kg", "lt", "m", "cx"]],
-        width=200
+        width=200,
+        value=produto.unidade if produto else None
     )
 
     erro = ft.Text("", color=tema["botao_vermelho"], size=12)
@@ -72,12 +78,20 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar):
             "unidade": unidade.value or ""
         }
 
-        adicionar_produto(dados)
-        ao_salvar(e)  # <-- agora recebe 'e'
+        if produto:
+            editar_produto(produto.id, dados)
+        else:
+            adicionar_produto(dados)
+
+        ao_salvar(e)
 
     return ft.Column(
         controls=[
-            ft.Text("🆕 Cadastro de Produto", size=30, color=tema["texto"]),
+            ft.Text(
+                "✏️ Edição de Produto" if produto else "🆕 Cadastro de Produto",
+                size=30,
+                color=tema["texto"]
+            ),
             ft.Divider(),
             ft.Row([nome]),
             ft.Row([codigo_barras]),

@@ -28,6 +28,7 @@ def adicionar_produto(dados: dict) -> Produto:
         unidade=dados.get("unidade", "").strip()
     )
     produtos_memoria.append(novo_produto)
+    print(f"[Produto criado] ID recebido: {novo_produto}")
     return novo_produto
 
 def listar_produtos() -> List[Produto]:
@@ -35,7 +36,11 @@ def listar_produtos() -> List[Produto]:
 
 def remover_produto(id_produto: str) -> None:
     global produtos_memoria
+    antes = len(produtos_memoria)
     produtos_memoria = [p for p in produtos_memoria if p.id != id_produto]
+    depois = len(produtos_memoria)
+    print(f"[remover_produto] Removidos: {antes - depois}")
+
 
 def editar_produto(id_produto: str, novos_dados: dict) -> None:
     for produto in produtos_memoria:
@@ -48,3 +53,9 @@ def editar_produto(id_produto: str, novos_dados: dict) -> None:
             produto.estoque_minimo = int(novos_dados.get("estoque_minimo", produto.estoque_minimo))
             produto.unidade = novos_dados.get("unidade", produto.unidade).strip()
             break
+
+def buscar_produto_por_id(id_produto: str) -> Optional[Produto]:
+    for p in produtos_memoria:
+        if p.id == id_produto:
+            return p
+    return None

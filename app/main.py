@@ -11,6 +11,8 @@ def main(page: ft.Page):
     page.session.set("modulo_atual", "dashboard")
 
     content_area = ft.Ref[ft.Container]()
+    page.content_area = content_area  # ✅ Permite acesso no router
+
     menu_ref = ft.Ref[ft.Container]()
     logo_ref = ft.Ref[ft.Image]()
 
@@ -28,6 +30,7 @@ def main(page: ft.Page):
 
     rota_para_modulo = {f"/{mod}": mod for mod, _ in modulos}
     rota_para_modulo["/cadastrar-produto"] = "cadastrar-produto"
+    rota_para_modulo["/editar-produto"] = "editar-produto"
 
     menu_refs = {}
     menu_botoes = []
@@ -38,6 +41,12 @@ def main(page: ft.Page):
     def navegar(modulo):
         print(f"[main] Navegando para módulo: {modulo}")
         tema = obter_tema()
+        modulo_atual = page.session.get("modulo_atual")
+
+        if modulo == modulo_atual and content_area.current.content:
+            content_area.current.content = None
+            page.update()
+
         page.session.set("modulo_atual", modulo)
 
         for btn in menu_botoes:
@@ -117,9 +126,10 @@ def main(page: ft.Page):
         navegar(modulo_atual)
 
     def route_change(route):
-        rota = route.route.lower()
-        print(f"[main] route_change: {rota}")
-        modulo = rota_para_modulo.get(rota, "dashboard")
+        rota_completa = route.route.lower()
+        rota_base = rota_completa.split("?")[0]
+        print(f"[main] route_change: {rota_completa} → base: {rota_base}")
+        modulo = rota_para_modulo.get(rota_base, "dashboard")
         navegar(modulo)
 
     page.on_route_change = route_change

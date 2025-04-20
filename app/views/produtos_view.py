@@ -1,23 +1,42 @@
 import flet as ft
+from models.produto_model import listar_produtos, remover_produto
+from services.alert_service import exibir_alerta
 from services.theme_service import get_theme_colors
-from models.produto_model import listar_produtos
 
-def produtos_view(page: ft.Page):
+def produtos_view(page: ft.Page, content_area=None, atualizar_interface=None):
     tema = get_theme_colors("escuro" if page.session.get("tema_escuro") else "claro")
     produtos = listar_produtos()
 
-    # Configurações
     largura_tabela = 1220
     column_spacing = 90
-    columns = [
-        ft.DataColumn(ft.Text("Código de Barras")),
-        ft.DataColumn(ft.Text("Nome")),
-        ft.DataColumn(ft.Text("Categoria")),
-        ft.DataColumn(ft.Text("Estoque")),
-        ft.DataColumn(ft.Text("Preço")),
-        ft.DataColumn(ft.Text("Unidade")),
-        ft.DataColumn(ft.Text("Ação"))
-    ]
+
+    def confirmar_exclusao(produto_id, produto_nome):
+        def excluir_produto(e):
+            print(f"[EXCLUIR] {produto_id} - {produto_nome}")
+            remover_produto(produto_id)
+            page.overlay.clear()
+
+            # 🔄 Atualiza a interface
+            if content_area:
+                content_area.current.content = produtos_view(page, content_area, atualizar_interface)
+                page.update()
+            elif atualizar_interface:
+                atualizar_interface()
+
+        def cancelar(e):
+            page.overlay.clear()
+            page.update()
+
+        exibir_alerta(
+            page,
+            titulo="🗑️ Confirmar exclusão",
+            mensagem=f"Deseja realmente excluir o produto: {produto_nome}?",
+            tipo="confirmacao",
+            on_confirmar=excluir_produto,
+            on_cancelar=cancelar,
+            texto_confirmar="Excluir",
+            texto_cancelar="Cancelar"
+        )
 
     def linha_produto(p):
         return ft.Container(
@@ -30,7 +49,20 @@ def produtos_view(page: ft.Page):
                 ft.Text(str(p.estoque), expand=1),
                 ft.Text(f"R$ {p.preco:.2f}", expand=1),
                 ft.Text(p.unidade or "-", expand=1),
-                ft.Text("N/D", expand=1),
+                ft.Row([
+                    ft.IconButton(
+                        icon=ft.Icons.EDIT,
+                        tooltip="Editar",
+                        icon_color=tema["texto"],
+                        on_click=lambda e: page.go(f"/editar-produto?id={p.id}")
+                    ),
+                    ft.IconButton(
+                        icon=ft.Icons.DELETE,
+                        tooltip="Excluir",
+                        icon_color=tema["botao_vermelho"],
+                        on_click=lambda e: confirmar_exclusao(p.id, p.nome)
+                    )
+                ], expand=1)
             ], spacing=20)
         )
 
@@ -71,7 +103,7 @@ def produtos_view(page: ft.Page):
                             border=ft.border.all(1, tema["borda"]),
                             bgcolor=tema["fundo"],
                             content=ft.Column([
-                                # Cabeçalho fixo
+                                # Cabeçalho
                                 ft.Container(
                                     width=largura_tabela,
                                     bgcolor=tema["botao_menu_hover"],
@@ -86,7 +118,7 @@ def produtos_view(page: ft.Page):
                                         ft.Text("Ação", expand=1),
                                     ], spacing=20)
                                 ),
-                                # Corpo com rolagem e linhas de grade
+                                # Lista de produtos
                                 ft.Container(
                                     height=480,
                                     width=largura_tabela,
