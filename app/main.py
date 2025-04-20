@@ -1,6 +1,7 @@
 import flet as ft
 from services.theme_service import get_theme_colors
-
+from views.configuracoes_view import configuracoes_view
+from routers.router import carregar_modulo
 
 def main(page: ft.Page):
     page.title = "labPDV - Sistema de Vendas"
@@ -8,13 +9,14 @@ def main(page: ft.Page):
     page.window_full_screen = True
 
     page.session.set("tema_escuro", False)
-    page.session.set("modulo_atual", "PDV")
+    page.session.set("modulo_atual", "Dashboard")
 
     content_area = ft.Ref[ft.Container]()
     menu_ref = ft.Ref[ft.Container]()
     logo_ref = ft.Ref[ft.Image]()
 
     modulos = [
+        ("Dashboard", "📊"),
         ("PDV", "💰"),
         ("Produtos", "📦"),
         ("Clientes", "🛡️"),
@@ -40,13 +42,10 @@ def main(page: ft.Page):
             btn.update()
 
         if modulo == "Configurações":
-            content_area.current.content = configuracoes_view()
+            content_area.current.content = configuracoes_view(page, atualizar_interface)
         else:
-            content_area.current.content = ft.Text(
-                f"✨ Você está no módulo: {modulo}",
-                size=30,
-                color=tema["texto"]
-            )
+            content_area.current.content = carregar_modulo(modulo, page)
+
         page.update()
 
     def criar_botao(modulo, icone):
@@ -69,36 +68,6 @@ def main(page: ft.Page):
         menu_refs[modulo] = botao
         menu_botoes.append(botao)
         return botao
-
-    def configuracoes_view():
-        tema = obter_tema()
-
-        def alternar_tema(e):
-            page.session.set("tema_escuro", e.control.value)
-            atualizar_interface()
-
-        def voltar_inicio(e=None):
-            navegar("PDV")
-
-        return ft.Column([
-            ft.Row([
-                ft.Text("⚙️ Configurações", size=30, color=tema["texto"], expand=True),
-                ft.ElevatedButton(
-                    "🏠 Voltar ao Início",
-                    on_click=voltar_inicio,
-                    bgcolor=tema["botao_comum"],
-                    color=tema["texto"]
-                )
-            ]),
-            ft.Divider(),
-            ft.Row([
-                ft.Text("🌙 Tema Escuro:", expand=True, color=tema["texto"]),
-                ft.Switch(
-                    value=page.session.get("tema_escuro"),
-                    on_change=alternar_tema
-                )
-            ])
-        ], spacing=10)
 
     def atualizar_interface():
         tema = obter_tema()
@@ -145,10 +114,9 @@ def main(page: ft.Page):
         )
 
         page.theme_mode = ft.ThemeMode.DARK if page.session.get("tema_escuro") else ft.ThemeMode.LIGHT
-        modulo_atual = page.session.get("modulo_atual") or "PDV"
+        modulo_atual = page.session.get("modulo_atual") or "Dashboard"
         navegar(modulo_atual)
 
     atualizar_interface()
-
 
 ft.app(target=main)
