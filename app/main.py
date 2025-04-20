@@ -1,6 +1,5 @@
 import flet as ft
 from services.theme_service import get_theme_colors
-from views.configuracoes_view import configuracoes_view
 from routers.router import carregar_modulo
 
 def main(page: ft.Page):
@@ -9,23 +8,26 @@ def main(page: ft.Page):
     page.window_full_screen = True
 
     page.session.set("tema_escuro", False)
-    page.session.set("modulo_atual", "Dashboard")
+    page.session.set("modulo_atual", "dashboard")
 
     content_area = ft.Ref[ft.Container]()
     menu_ref = ft.Ref[ft.Container]()
     logo_ref = ft.Ref[ft.Image]()
 
     modulos = [
-        ("Dashboard", "📊"),
-        ("PDV", "💰"),
-        ("Produtos", "📦"),
-        ("Clientes", "🛡️"),
-        ("Fornecedores", "🚚"),
-        ("Contas a Pagar", "📤"),
-        ("Contas a Receber", "📥"),
-        ("Relatórios", "📊"),
-        ("Configurações", "⚙️")
+        ("dashboard", "📊"),
+        ("pdv", "💰"),
+        ("produtos", "📦"),
+        ("clientes", "🛡️"),
+        ("fornecedores", "🚚"),
+        ("contas-pagar", "📤"),
+        ("contas-receber", "📥"),
+        ("relatorios", "📊"),
+        ("configuracoes", "⚙️")
     ]
+
+    rota_para_modulo = {f"/{mod}": mod for mod, _ in modulos}
+    rota_para_modulo["/cadastrar-produto"] = "cadastrar-produto"
 
     menu_refs = {}
     menu_botoes = []
@@ -34,6 +36,7 @@ def main(page: ft.Page):
         return get_theme_colors("escuro" if page.session.get("tema_escuro") else "claro")
 
     def navegar(modulo):
+        print(f"[main] Navegando para módulo: {modulo}")
         tema = obter_tema()
         page.session.set("modulo_atual", modulo)
 
@@ -41,18 +44,14 @@ def main(page: ft.Page):
             btn.bgcolor = tema["botao_menu_hover"] if menu_refs.get(modulo) == btn else tema["botao_menu"]
             btn.update()
 
-        if modulo == "Configurações":
-            content_area.current.content = configuracoes_view(page, atualizar_interface)
-        else:
-            content_area.current.content = carregar_modulo(modulo, page)
-
+        content_area.current.content = carregar_modulo(modulo, page, atualizar_interface)
         page.update()
 
     def criar_botao(modulo, icone):
         tema = obter_tema()
         botao = ft.Container(
             content=ft.TextButton(
-                content=ft.Row([ft.Text(f"{icone} {modulo}", expand=True)]),
+                content=ft.Row([ft.Text(f"{icone} {modulo.replace('-', ' ').title()}", expand=True)]),
                 style=ft.ButtonStyle(
                     padding=15,
                     bgcolor=tema["botao_menu"],
@@ -60,7 +59,7 @@ def main(page: ft.Page):
                     overlay_color=tema["botao_menu_hover"],
                     shape=ft.RoundedRectangleBorder(radius=8)
                 ),
-                on_click=lambda e: navegar(modulo),
+                on_click=lambda e: page.go(f"/{modulo}"),
             ),
             bgcolor=tema["botao_menu"],
             border_radius=8
@@ -114,9 +113,17 @@ def main(page: ft.Page):
         )
 
         page.theme_mode = ft.ThemeMode.DARK if page.session.get("tema_escuro") else ft.ThemeMode.LIGHT
-        modulo_atual = page.session.get("modulo_atual") or "Dashboard"
+        modulo_atual = page.session.get("modulo_atual") or "dashboard"
         navegar(modulo_atual)
 
+    def route_change(route):
+        rota = route.route.lower()
+        print(f"[main] route_change: {rota}")
+        modulo = rota_para_modulo.get(rota, "dashboard")
+        navegar(modulo)
+
+    page.on_route_change = route_change
     atualizar_interface()
+    page.go("/dashboard")
 
 ft.app(target=main)
