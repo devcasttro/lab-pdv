@@ -1,8 +1,4 @@
-Perfeito, Lucas! Aqui está um modelo de `README.md` completo e profissional para o projeto **labPDV**, já estruturado para GitHub:
 
----
-
-```markdown
 # 🧾 labPDV – Sistema de Ponto de Venda
 
 **labPDV** é um sistema PDV (Ponto de Venda) moderno, leve e totalmente personalizável, desenvolvido com [Flet](https://flet.dev/) em Python. Ele foi projetado para funcionar de forma offline em desktop, com arquitetura escalável e suporte a temas claro/escuro, controle de permissões, multiusuário e muito mais.
@@ -113,14 +109,3 @@ run_dev.bat
 ## 📄 Licença
 
 Este projeto é privado e licenciado para uso individual conforme definido por contrato.
-
-```
-
----
-
-Se quiser posso gerar também:
-- Versão em português com título PT-BR
-- Versão com badges (pip version, license, last update)
-- Versão para README online com preview visual
-
-Deseja que salve isso como `README.md` direto no projeto ou prefere colar manualmente no GitHub?
