@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentação Oficial - LabPDV</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="nav-container">
+      <h1>Documentação Oficial - LabPDV</h1>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+    </div>
+    <nav class="menu" id="menu">
+      <ul>
+        <li><a href="#introducao">1. Introdução</a></li>
+        <li><a href="#modulos">2. Módulos</a></li>
+        <li><a href="#bd">3. Banco de Dados</a></li>
+        <li><a href="#tecnica">4. Documentação Técnica</a></li>
+        <li><a href="#roadmap">5. Roadmap</a></li>
+        <li><a href="#dev">6. Para Desenvolvedores</a></li>
+        <li><a href="#versoes">7. Histórico</a></li>
+        <li><a href="#readme">8. README</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="introducao">
+      <h2>1. Introdução</h2>
+      <p>LabPDV é um sistema de automação comercial com foco em vendas, estoque, gestão financeira e operações administrativas. Modular e escalável, adapta-se a pequenos e médios comércios.</p>
+      <ul>
+        <li><strong>Objetivo:</strong> Automatizar e facilitar o controle de vendas e estoque.</li>
+        <li><strong>Stack:</strong> Python, Flet, SQLite, HTML, CSS, JS</li>
+        <li><strong>Licença:</strong> SaaS com controle por licença local e painel web.</li>
+      </ul>
+    </section>
+
+    <section id="modulos">
+      <h2>2. Módulos do Sistema</h2>
+      <div class="modulo" id="pdv">
+        <h3>PDV</h3>
+        <p>Realiza vendas, controla pagamento, desconto, gera recibos e interage com estoque e financeiro.</p>
+        <img src="assets/img/pdv-modulo.svg" alt="PDV - Diagrama Funcional">
+      </div>
+
+      <div class="modulo" id="produtos">
+        <h3>Produtos</h3>
+        <p>Gerencia itens cadastrados, margem de lucro, categoria, unidade e disponibilidade.</p>
+        <img src="assets/img/produtos-modulo.svg" alt="Produtos - Diagrama Funcional">
+      </div>
+
+      <div class="modulo" id="estoque">
+        <h3>Estoque</h3>
+        <p>Movimentações de entrada e saída, atualização de preço, relatório e controle de bloqueio de venda.</p>
+        <img src="assets/img/estoque-modulo.svg" alt="Estoque - Diagrama Funcional">
+      </div>
+
+      <div class="modulo" id="clientes">
+        <h3>Clientes</h3>
+        <p>Cadastro, limite de crédito, histórico de compras e vinculação com contas a receber.</p>
+        <img src="assets/img/clientes-modulo.svg" alt="Clientes - Diagrama Funcional">
+      </div>
+
+      <div class="modulo" id="orcamentos">
+        <h3>Orçamentos</h3>
+        <p>Permite gerar uma proposta sem afetar estoque ou caixa. Pode ser convertida em venda no PDV.</p>
+        <img src="assets/img/orcamentos-modulo.svg" alt="Módulo de Orçamentos">
+      </div>
+
+      <div class="modulo" id="contas-pagar">
+        <h3>Contas a Pagar</h3>
+        <p>Gerencia obrigações financeiras. Inclui cadastro, vencimento e controle de status (pago/pendente).</p>
+        <img src="assets/img/contas-pagar-modulo.svg" alt="Módulo de Contas a Pagar">
+      </div>
+
+      <div class="modulo" id="painel-admin">
+        <h3>Painel Administrativo</h3>
+        <p>Administra empresas, licenças, planos, backup remoto e usuários. Acesso via navegador.</p>
+        <img src="assets/img/painel-admin-modulo.svg" alt="Painel Administrativo e Licenciamento">
+      </div>
+
+      <div class="modulo" id="fluxo-geral">
+        <h3>Visão Geral dos Módulos</h3>
+        <p>O diagrama abaixo ilustra como os principais módulos do LabPDV se interconectam entre si.</p>
+        <img src="assets/img/fluxo-geral.svg" alt="Fluxo Geral entre os módulos do sistema">
+      </div>
+    </section>
+
+    <section id="bd">
+      <h2>3. Banco de Dados</h2>
+      <p>Estrutura relacional contendo módulos conectados via chaves estrangeiras. Veja o diagrama completo abaixo.</p>
+      <img src="assets/img/db-diagrama.svg" alt="Diagrama Relacional do Banco de Dados">
+    </section>
+
+    <section id="tecnica">
+      <h2>4. Documentação Técnica</h2>
+      <p>Segue em arquivos separados em <code>js/</code> e <code>css/</code> com exemplos comentados. Tooltips em SVG ativados via JS para blocos com &lt;title&gt;.</p>
+    </section>
+
+    <section id="roadmap">
+      <h2>5. Roadmap e Expansão</h2>
+      <ul>
+        <li>Integração com NFC-e</li>
+        <li>Sincronização entre dispositivos</li>
+        <li>API externa e App mobile</li>
+        <li>Controle de permissões avançadas</li>
+      </ul>
+    </section>
+
+    <section id="dev">
+      <h2>6. Para Desenvolvedores</h2>
+      <p>Esta seção é voltada para desenvolvedores que desejam contribuir com o projeto ou entender a arquitetura técnica do sistema.</p>
+      <h3>Tecnologias Utilizadas</h3>
+      <ul>
+        <li><strong>Frontend:</strong> Flet (Python)</li>
+        <li><strong>Backend/API:</strong> FastAPI (planejado)</li>
+        <li><strong>Banco de Dados:</strong> SQLite / PostgreSQL</li>
+        <li><strong>Documentação:</strong> HTML, CSS, SVG, JavaScript puro</li>
+      </ul>
+      <h3>Estrutura do Projeto</h3>
+      <pre><code>documentacao/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   └── main.js
+└── assets/
+    └── img/
+        ├── *.svg</code></pre>
+      <h3>Funcionalidades por Módulo</h3>
+      <ul>
+        <li><strong>PDV:</strong> Vendas, recibos, troco, parcelamento</li>
+        <li><strong>Produtos:</strong> Cadastro completo, margem de lucro, estoque mínimo</li>
+        <li><strong>Estoque:</strong> Entradas e saídas, atualização de preço, relatórios</li>
+        <li><strong>Financeiro:</strong> Contas a pagar e receber</li>
+        <li><strong>Painel Admin:</strong> Controle de usuários, empresas, backups e licenças</li>
+      </ul>
+      <h3>Licenciamento</h3>
+      <p>O sistema funciona com ativação via painel web. Cada licença define prazo de validade, plano e limites de uso.</p>
+      <h3>Planejamento de Deploy</h3>
+      <ul>
+        <li>Execução local com banco SQLite (modo offline)</li>
+        <li>Servidor backend e painel online (Heroku ou VPS)</li>
+        <li>Versão futura mobile (APK) e API externa</li>
+      </ul>
+      <p><strong>Desenvolvido por:</strong> Lucas Castro - © 2024</p>
+    </section>
+
+    <section id="versoes">
+      <h2>7. Histórico de Versões</h2>
+      <h3>v1.0 - Abril 2024</h3>
+      <ul>
+        <li>Implementação do módulo PDV (Flet)</li>
+        <li>Cadastro e edição de produtos com margem e controle de estoque</li>
+        <li>Entrada e saída no módulo de Estoque</li>
+        <li>Controle visual por status de produto (ativo/inativo)</li>
+        <li>Geração de recibo no PDV (modo local)</li>
+      </ul>
+      <h3>v1.1 - Abril 2024</h3>
+      <ul>
+        <li>Criação da estrutura de Contas a Pagar e Receber</li>
+        <li>Integração de vendas parceladas com contas a receber</li>
+        <li>Inserção de bloqueio de venda sem estoque</li>
+        <li>Relacionamentos de estoque com produtos e relatórios</li>
+        <li>Painel de relatórios de movimentação</li>
+      </ul>
+      <h3>v1.2 - Abril 2024</h3>
+      <ul>
+        <li>Implementação de Painel Administrativo Web (estrutura de licenças e backup)</li>
+        <li>Sistema de ativação por licença (modo local com controle de validade)</li>
+        <li>Integração do sistema de backup manual e remoto</li>
+        <li>Inserção do controle de usuários, empresas e permissões básicas</li>
+        <li>Geração de toda a documentação oficial em HTML + SVG</li>
+      </ul>
+      <h3>v1.3 - Previsto</h3>
+      <ul>
+        <li>Emissão de NFC-e</li>
+        <li>Integração com API externa</li>
+        <li>App mobile com Flet (versão Android)</li>
+        <li>Login por perfil e permissões individuais</li>
+      </ul>
+    </section>
+
+    <section id="readme">
+      <h2>8. README Técnico Integrado</h2>
+      <p>Este é o conteúdo técnico do projeto LabPDV, integrado diretamente à documentação como referência completa para desenvolvedores e mantenedores.</p>
+
+      <h3>Funcionalidades principais</h3>
+      <ul>
+        <li>Interface local com Flet (desktop)</li>
+        <li>Tema claro/escuro com paleta personalizada</li>
+        <li>Cadastro de produtos, unidades e categorias</li>
+        <li>Módulo PDV: vendas, descontos, parcelamento, recibo</li>
+        <li>Cadastro de clientes e fornecedores</li>
+        <li>Relatórios de vendas, estoque e financeiro</li>
+        <li>Movimentações de estoque com histórico</li>
+        <li>Controle de permissões e níveis de acesso</li>
+        <li>Sistema de assinatura/licença (offline e via painel)</li>
+        <li>Exportação de recibos em PDF e opção de impressão</li>
+        <li>Notificações visuais com feedback</li>
+        <li>Detecção automática de resolução de tela</li>
+      </ul>
+
+      <h3>Estrutura do Projeto</h3>
+      <pre><code>labPDV/
+├── app/
+│   ├── main.py
+│   ├── assets/
+│   ├── services/
+│   ├── views/
+│   ├── models/
+│   └── controllers/
+├── documentacao/
+│   ├── index.html
+│   ├── css/
+│   ├── js/
+│   └── assets/img/
+├── requirements.txt
+├── run_dev.bat
+└── README.md</code></pre>
+
+      <h3>Como Executar</h3>
+      <ol>
+        <li>Clonar o repositório</li>
+        <li>Criar e ativar o ambiente virtual</li>
+        <li>Instalar as dependências via <code>pip install -r requirements.txt</code></li>
+        <li>Executar com <code>flet run --reload app/main.py</code> ou o script <code>run_dev.bat</code></li>
+      </ol>
+
+      <h3>Requisitos</h3>
+      <ul>
+        <li>Python 3.10+</li>
+        <li>Flet 0.27+</li>
+        <li>Sistema Operacional: Windows</li>
+      </ul>
+
+      <h3>Planejamento de Deploy</h3>
+      <ul>
+        <li>Execução local com banco SQLite</li>
+        <li>Painel administrativo online (Heroku ou VPS)</li>
+        <li>App mobile e API REST futura</li>
+      </ul>
+
+      <h3>Autor</h3>
+      <p><strong>Lucas Castro</strong> – Projeto mantido sob o selo <strong>Lab do Analista</strong></p>
+
+      <h3>Licença</h3>
+      <p>Este projeto é privado e licenciado para uso individual conforme definido por contrato.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>LabPDV &copy; 2024 - Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>

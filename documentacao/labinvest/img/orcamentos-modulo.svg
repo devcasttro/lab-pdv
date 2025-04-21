@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="180">
+  <!-- Bloco: Criar Orçamento -->
+  <rect x="70" y="20" width="200" height="40" fill="#17a2b8" rx="5"/>
+  <text x="95" y="45" fill="white" font-family="Arial" font-size="14">Criar Orçamento</text>
+  <title>Orçamento sem impacto no estoque nem caixa</title>
+
+  <!-- Seta -->
+  <line x1="170" y1="60" x2="170" y2="100" stroke="#000" stroke-width="2"/>
+  <polygon points="165,100 175,100 170,110" fill="#000"/>
+
+  <!-- Bloco: Enviar ao PDV -->
+  <rect x="40" y="110" width="260" height="50" fill="#ffc107" rx="5"/>
+  <text x="70" y="140" fill="#000" font-family="Arial" font-size="12">
+    Enviar para PDV com cliente e itens
+  </text>
+  <title>Transformar orçamento em venda futura</title>
+</svg>

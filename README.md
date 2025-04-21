@@ -1,77 +1,79 @@
 
-# 🧾 labPDV – Sistema de Ponto de Venda
+# 🧾 LabPDV – Sistema de Ponto de Venda
 
-**labPDV** é um sistema PDV (Ponto de Venda) moderno, leve e totalmente personalizável, desenvolvido com [Flet](https://flet.dev/) em Python. Ele foi projetado para funcionar de forma offline em desktop, com arquitetura escalável e suporte a temas claro/escuro, controle de permissões, multiusuário e muito mais.
+**LabPDV** é um sistema moderno e modular de Ponto de Venda (PDV), desenvolvido com [Flet](https://flet.dev/) em Python, pensado para funcionar offline e com arquitetura escalável. Ele oferece recursos completos de vendas, estoque, relatórios e administração, com foco em facilidade de uso, segurança e performance.
 
 ---
 
 ## 🎯 Funcionalidades principais
 
-- 🖥️ Interface moderna e responsiva com Flet
-- 🌙 Tema claro/escuro dinâmico com personalização
+- 🖥️ Interface local com Flet (desktop)
+- 🌗 Tema claro/escuro com paleta personalizada
+- 📦 Cadastro de produtos, unidades e categorias
+- 🧾 Módulo PDV: vendas, descontos, parcelamento, recibo
 - 🧑‍🤝‍🧑 Cadastro de clientes e fornecedores
-- 📦 Controle de estoque com movimentações
-- 💰 Módulo de vendas (PDV)
-- 📊 Relatórios de vendas e financeiro
-- 🔒 Controle de assinatura/licença de uso
-- 🔐 Níveis de acesso e permissões por usuário
-- 📏 Detecção automática de resolução da tela
+- 📊 Relatórios de vendas, estoque e financeiro
+- 🔄 Entrada e saída de estoque com histórico
+- 🔐 Controle de permissões e níveis de acesso
+- 🛡️ Sistema de assinatura/licença (offline e via painel)
 - 📥 Exportação de recibos em PDF e opção de impressão
-- 🔔 Sistema de notificações visuais com feedback
+- 🔔 Notificações visuais com feedback e alertas
+- 📏 Detecção automática de resolução de tela
 
 ---
 
-## 🏗️ Estrutura de pastas
+## 🏗️ Estrutura do Projeto
 
 ```shell
 labPDV/
-│
 ├── app/
-│   ├── main.py                  # Arquivo principal da aplicação
+│   ├── main.py                  # Ponto de entrada da aplicação
 │   ├── assets/                  # Logos, imagens e arquivos estáticos
 │   ├── services/                # Lógica de tema, resolução, notificações
-│   │   ├── theme_service.py
-│   │   ├── resolution_service.py
 │   ├── views/                   # Telas e componentes
 │   ├── models/                  # Modelos de dados
 │   └── controllers/             # Regras de negócio
-│
-├── run_dev.bat                 # Script para iniciar app com hot reload
-├── requirements.txt            # Dependências do projeto
-├── README.md                   # Documentação do projeto
+├── documentacao/
+│   ├── index.html               # Documentação visual do projeto
+│   ├── css/
+│   ├── js/
+│   └── assets/img/
+├── requirements.txt            # Dependências
+├── run_dev.bat                 # Execução Windows com hot reload
+└── README.md
 ```
 
 ---
 
 ## 🚀 Como executar
 
-### 1. Clone o repositório
+1. Clone o repositório:
 
 ```bash
 git clone https://github.com/seu-usuario/labPDV.git
 cd labPDV
 ```
 
-### 2. Instale o ambiente virtual
+2. Crie e ative o ambiente virtual:
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate  # (Linux/macOS use: source .venv/bin/activate)
+.venv\Scripts\activate  # Linux/macOS: source .venv/bin/activate
 ```
 
-### 3. Instale as dependências
+3. Instale as dependências:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Execute a aplicação
+4. Execute a aplicação:
 
 ```bash
 flet run --reload app/main.py
 ```
 
-Ou use o script automático no Windows:
+Ou use o script automático (Windows):
 
 ```bash
 run_dev.bat
@@ -81,21 +83,49 @@ run_dev.bat
 
 ## 📌 Requisitos
 
-- Python 3.10 ou superior
+- Python 3.10+
 - [Flet](https://flet.dev/) 0.27+
-- Sistema operacional Windows (atualmente otimizado para Desktop)
+- Windows (foco atual no modo desktop offline)
 
 ---
 
-## ✅ Roadmap futuro
+## 🔧 Roadmap Futuro
 
 - [x] Tema dinâmico com paleta personalizada
 - [x] Detecção de resolução automática
-- [ ] Tela de login com autenticação segura
-- [ ] Controle de permissões e níveis de acesso
-- [ ] Integração com painel administrativo web
-- [ ] API REST para integração com apps móveis
-- [ ] Impressão direta de recibos + envio via WhatsApp
+- [x] Sistema de backup manual e remoto
+- [ ] Autenticação segura com login por usuário
+- [ ] Controle de permissões avançadas
+- [ ] Painel Administrativo Web (multiempresa)
+- [ ] API REST para integração com app mobile
+- [ ] Emissão de NFC-e + WhatsApp
+
+---
+
+## 📜 Histórico de Versões
+
+### v1.0 - Abril 2024
+- Módulo PDV
+- Cadastro de produtos com margem e status
+- Módulo de estoque com entradas/saídas
+- Recibos e impressão local
+
+### v1.1 - Abril 2024
+- Contas a pagar e receber
+- Vendas parceladas integradas com financeiro
+- Relatórios de vendas e estoque
+
+### v1.2 - Abril 2024
+- Painel Administrativo Web
+- Controle de licença e planos
+- Backup remoto e gerenciamento de empresas
+- Documentação oficial em HTML/SVG
+
+### v1.3 - Previsto
+- NFC-e e envio por WhatsApp
+- App mobile Flet (Android)
+- Login por permissão
+- API pública para integração externa
 
 ---
 
