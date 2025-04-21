@@ -220,7 +220,7 @@ def produtos_view(page: ft.Page, content_area=None, atualizar_interface=None):
                                     ], spacing=20)
                                 ),
                                 ft.Container(
-                                    height=480,
+                                    height=400,
                                     width=largura_tabela,
                                     content=ft.ListView(
                                         ref=lista_produtos,

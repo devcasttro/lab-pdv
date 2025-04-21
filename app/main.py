@@ -11,16 +11,17 @@ def main(page: ft.Page):
     page.session.set("modulo_atual", "dashboard")
 
     content_area = ft.Ref[ft.Container]()
-    page.content_area = content_area  # ✅ Permite acesso no router
+    page.content_area = content_area
 
     menu_ref = ft.Ref[ft.Container]()
     logo_ref = ft.Ref[ft.Image]()
 
     modulos = [
         ("dashboard", "📊"),
-        ("pdv", "💰"),
+        ("pdv", "🖥️"),
         ("produtos", "📦"),
-        ("clientes", "🛡️"),
+        ("estoque", "🏷️"),
+        ("clientes", "👤"),
         ("fornecedores", "🚚"),
         ("contas-pagar", "📤"),
         ("contas-receber", "📥"),
@@ -58,9 +59,11 @@ def main(page: ft.Page):
 
     def criar_botao(modulo, icone):
         tema = obter_tema()
+        nome_formatado = "PDV" if modulo == "pdv" else modulo.replace("-", " ").title()
+
         botao = ft.Container(
             content=ft.TextButton(
-                content=ft.Row([ft.Text(f"{icone} {modulo.replace('-', ' ').title()}", expand=True)]),
+                content=ft.Row([ft.Text(f"{icone} {nome_formatado}", expand=True)]),
                 style=ft.ButtonStyle(
                     padding=15,
                     bgcolor=tema["botao_menu"],
@@ -82,6 +85,12 @@ def main(page: ft.Page):
         menu_refs.clear()
         menu_botoes.clear()
 
+        botoes_menu = [
+            criar_botao(mod, ico)
+            for mod, ico in modulos[:-1]  # Todos menos o último ("configuracoes")
+        ]
+        botao_configuracoes = criar_botao(modulos[-1][0], modulos[-1][1])
+
         menu = ft.Column(
             controls=[
                 ft.Container(
@@ -89,12 +98,14 @@ def main(page: ft.Page):
                     alignment=ft.alignment.center,
                     padding=10
                 ),
-                ft.Container(height=10),
-                ft.Column([criar_botao(mod, ico) for mod, ico in modulos[:-1]], spacing=10),
-                criar_botao(modulos[-1][0], modulos[-1][1])
+                ft.Column(botoes_menu, spacing=10),
+                ft.Container(
+                    content=botao_configuracoes,
+                    alignment=ft.alignment.bottom_center
+                )
             ],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            expand=True
+            expand=True,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         )
 
         page.controls.clear()

@@ -5,25 +5,34 @@ from models.produto_model import adicionar_produto, editar_produto, Produto
 def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: Produto = None):
     tema = get_theme_colors("escuro" if page.session.get("tema_escuro") else "claro")
 
-    # Campos
-    nome = ft.TextField(label="Nome do Produto", expand=True, value=produto.nome if produto else "")
-    codigo_barras = ft.TextField(label="Código de Barras", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+    nome = ft.TextField(label="Nome do Produto", expand=3, value=produto.nome if produto else "")
+    codigo_barras = ft.TextField(label="Código de Barras", expand=1, keyboard_type=ft.KeyboardType.NUMBER,
                                  value=produto.codigo_barras if produto else "")
-    preco = ft.TextField(label="Preço de Venda (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+    preco = ft.TextField(label="Preço de Venda (R$)", expand=1.5, keyboard_type=ft.KeyboardType.NUMBER,
                          value=str(produto.preco) if produto else "")
-    custo = ft.TextField(label="Custo de Aquisição (R$)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
+    custo = ft.TextField(label="Custo de Aquisição (R$)", expand=1.5, keyboard_type=ft.KeyboardType.NUMBER,
                          value=str(produto.custo) if produto else "")
-    categoria = ft.TextField(label="Categoria", expand=True, value=produto.categoria if produto else "")
-    estoque = ft.TextField(label="Estoque Atual", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
-                           value=str(produto.estoque) if produto else "")
-    estoque_minimo = ft.TextField(label="Estoque Mínimo", expand=True, keyboard_type=ft.KeyboardType.NUMBER,
-                                  value=str(produto.estoque_minimo) if produto else "")
+    categoria = ft.Dropdown(
+        label="Categoria",
+        options=[
+            ft.dropdown.Option("Alimento"),
+            ft.dropdown.Option("Bebida"),
+            ft.dropdown.Option("Limpeza"),
+            ft.dropdown.Option("Higiene")
+        ],
+        expand=2.2,
+        value=produto.categoria if produto else None
+    )
     unidade = ft.Dropdown(
         label="Unidade",
         options=[ft.dropdown.Option(u) for u in ["un", "kg", "lt", "m", "cx"]],
-        width=200,
+        expand=1.5,
         value=produto.unidade if produto else None
     )
+    estoque = ft.TextField(label="Estoque Atual", expand=1.5, keyboard_type=ft.KeyboardType.NUMBER,
+                           value=str(produto.estoque) if produto else "")
+    estoque_minimo = ft.TextField(label="Estoque Mínimo", expand=1.5, keyboard_type=ft.KeyboardType.NUMBER,
+                                  value=str(produto.estoque_minimo) if produto else "")
 
     erro = ft.Text("", color=tema["botao_vermelho"], size=12)
 
@@ -82,16 +91,29 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: Produt
         controls=[
             ft.Text("✏️ Edição de Produto" if produto else "🆕 Cadastro de Produto", size=30, color=tema["texto"]),
             ft.Divider(),
+
+            ft.Text("📋 Dados Básicos", size=16, weight=ft.FontWeight.BOLD, color=tema["texto"]),
             ft.Row([codigo_barras, nome], spacing=10),
-            ft.Row([custo, preco, categoria], spacing=10),
-            ft.Row([unidade, estoque, estoque_minimo], spacing=10),
+            ft.Row([unidade, categoria], spacing=10),
+
+            ft.Divider(),
+            ft.Text("💰 Dados Financeiros", size=16, weight=ft.FontWeight.BOLD, color=tema["texto"]),
+            ft.Row([preco, custo], spacing=10),
+
+            ft.Divider(),
+            ft.Text("📦 Dados de Estoque", size=16, weight=ft.FontWeight.BOLD, color=tema["texto"]),
+            ft.Row([estoque, estoque_minimo], spacing=10),
+
             erro,
             ft.Divider(),
+
             ft.Row([
                 ft.ElevatedButton("💾 Salvar", bgcolor=tema["botao_verde"], color=tema["texto_botao"],
+                                  height=45,
                                   on_click=salvar_produto,
                                   style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10))),
                 ft.ElevatedButton("❌ Cancelar", bgcolor=tema["botao_vermelho"], color=tema["texto_botao"],
+                                  height=45,
                                   on_click=ao_cancelar,
                                   style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10))),
             ], spacing=10)
