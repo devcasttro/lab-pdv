@@ -13,7 +13,13 @@ def filtrar_lista(lista, termo_busca, campos):
 
     for item in lista:
         for campo in campos:
-            valor = getattr(item, campo, "")
+            # Suporta tanto objetos quanto dicionários
+            valor = ""
+            if isinstance(item, dict):
+                valor = item.get(campo, "")
+            else:
+                valor = getattr(item, campo, "")
+
             if termo_normalizado in normalizar(str(valor)):
                 resultado.append(item)
                 break

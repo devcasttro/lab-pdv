@@ -25,7 +25,8 @@ def get_theme_colors(theme: str = "claro") -> dict:
             "texto_secundario": Colors.GREY_300,
             "texto_botao": Colors.WHITE,
             "borda": Colors.GREY_700,
-            "logo": "img/logo_escuro.png"
+            "logo": "img/logo_escuro.png",
+             "botao_azul": Colors.BLUE_500,
         }
 
     # Tema claro (default)
@@ -47,5 +48,6 @@ def get_theme_colors(theme: str = "claro") -> dict:
         "texto_secundario": Colors.GREY_600,
         "texto_botao": Colors.WHITE,
         "borda": Colors.GREY_300,
-        "logo": "img/logo_claro.png"
+        "logo": "img/logo_claro.png",
+        "botao_azul": Colors.BLUE_500,
     }

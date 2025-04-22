@@ -1,59 +1,115 @@
-from dataclasses import dataclass
-from typing import List, Optional
 import uuid
+from datetime import datetime
+from typing import List, Optional
+from database.connection import conectar
+from database.schema import criar_tabelas
 
-# Base de dados em memória (temporária)
-produtos_memoria: List["Produto"] = []
+# Criação automática das tabelas ao iniciar o módulo
+criar_tabelas()
 
-@dataclass
-class Produto:
-    id: str
-    nome: str
-    codigo_barras: str
-    preco: float
-    custo: float
-    estoque: int
-    estoque_minimo: int
-    unidade: str
-    categoria: str  # NOVO
+def adicionar_produto(dados: dict) -> str:
+    conn = conectar()
+    cursor = conn.cursor()
+    id_produto = str(uuid.uuid4())
 
-def adicionar_produto(dados: dict) -> Produto:
-    novo_produto = Produto(
-        id=str(uuid.uuid4()),
-        nome=dados["nome"].strip(),
-        codigo_barras=dados.get("codigo_barras", "").strip(),
-        preco=float(dados.get("preco", 0)),
-        custo=float(dados.get("custo", 0)),
-        estoque=int(dados.get("estoque", 0)),
-        estoque_minimo=int(dados.get("estoque_minimo", 0)),
-        unidade=dados.get("unidade", "").strip(),
-        categoria=dados.get("categoria", "").strip()
-    )
-    produtos_memoria.append(novo_produto)
-    return novo_produto
+    cursor.execute("""
+        INSERT INTO produtos (
+            id, nome, codigo_barras, preco, custo, margem_lucro,
+            estoque, estoque_minimo, unidade, categoria,
+            imagem_path, ativo, criado_em, atualizado_em
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        id_produto,
+        dados["nome"].strip(),
+        dados.get("codigo_barras", "").strip(),
+        float(str(dados.get("preco", "0")).replace(",", ".")),
+        float(str(dados.get("custo", "0")).replace(",", ".")),
+        float(str(dados.get("margem_lucro", "0")).replace(",", ".")),
+        int(dados.get("estoque", 0)),
+        int(dados.get("estoque_minimo", 0)),
+        dados.get("unidade", "").strip(),
+        dados.get("categoria", "").strip(),
+        dados.get("imagem_path", ""),
+        1,
+        datetime.now().isoformat(),
+        datetime.now().isoformat()
+    ))
 
-def listar_produtos() -> List[Produto]:
-    return produtos_memoria.copy()
+    conn.commit()
+    conn.close()
+    return id_produto
 
-def remover_produto(id_produto: str) -> None:
-    global produtos_memoria
-    produtos_memoria = [p for p in produtos_memoria if p.id != id_produto]
+def listar_produtos(status: str = "ativos") -> List[dict]:
+    conn = conectar()
+    cursor = conn.cursor()
+
+    if status == "ativos":
+        cursor.execute("SELECT * FROM produtos WHERE ativo = 1 ORDER BY LOWER(nome) ASC")
+    elif status == "inativos":
+        cursor.execute("SELECT * FROM produtos WHERE ativo = 0 ORDER BY LOWER(nome) ASC")
+    elif status == "ambos":
+        cursor.execute("SELECT * FROM produtos ORDER BY LOWER(nome) ASC")
+    else:
+        conn.close()
+        raise ValueError("Status inválido. Use 'ativos', 'inativos' ou 'ambos'.")
+
+    colunas = [col[0] for col in cursor.description]
+    produtos = [dict(zip(colunas, row)) for row in cursor.fetchall()]
+    conn.close()
+    return produtos
+
+def buscar_produto_por_id(id_produto: str) -> Optional[dict]:
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM produtos WHERE id = ?", (id_produto,))
+    row = cursor.fetchone()
+    colunas = [col[0] for col in cursor.description]
+    conn.close()
+    return dict(zip(colunas, row)) if row else None
 
 def editar_produto(id_produto: str, novos_dados: dict) -> None:
-    for produto in produtos_memoria:
-        if produto.id == id_produto:
-            produto.nome = novos_dados.get("nome", produto.nome).strip()
-            produto.codigo_barras = novos_dados.get("codigo_barras", produto.codigo_barras).strip()
-            produto.preco = float(novos_dados.get("preco", produto.preco))
-            produto.custo = float(novos_dados.get("custo", produto.custo))
-            produto.estoque = int(novos_dados.get("estoque", produto.estoque))
-            produto.estoque_minimo = int(novos_dados.get("estoque_minimo", produto.estoque_minimo))
-            produto.unidade = novos_dados.get("unidade", produto.unidade).strip()
-            produto.categoria = novos_dados.get("categoria", produto.categoria).strip()
-            break
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE produtos SET
+            nome = ?, codigo_barras = ?, preco = ?, custo = ?, margem_lucro = ?,
+            estoque = ?, estoque_minimo = ?, unidade = ?, categoria = ?,
+            imagem_path = ?, ativo = ?, atualizado_em = ?
+        WHERE id = ?
+    """, (
+        novos_dados["nome"].strip(),
+        novos_dados.get("codigo_barras", "").strip(),
+        float(str(novos_dados.get("preco", "0")).replace(",", ".")),
+        float(str(novos_dados.get("custo", "0")).replace(",", ".")),
+        float(str(novos_dados.get("margem_lucro", "0")).replace(",", ".")),
+        int(novos_dados.get("estoque", 0)),
+        int(novos_dados.get("estoque_minimo", 0)),
+        novos_dados.get("unidade", "").strip(),
+        novos_dados.get("categoria", "").strip(),
+        novos_dados.get("imagem_path", ""),
+        int(novos_dados.get("ativo", 1)),  # 🔥 Agora o campo ativo é atualizado!
+        datetime.now().isoformat(),
+        id_produto
+    ))
+    conn.commit()
+    conn.close()
 
-def buscar_produto_por_id(id_produto: str) -> Optional[Produto]:
-    for p in produtos_memoria:
-        if p.id == id_produto:
-            return p
-    return None
+def remover_produto(id_produto: str) -> None:
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE produtos SET ativo = 0, atualizado_em = ? WHERE id = ?",
+        (datetime.now().isoformat(), id_produto)
+    )
+    conn.commit()
+    conn.close()
+
+def reativar_produto(id_produto: str) -> None:
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE produtos SET ativo = 1, atualizado_em = ? WHERE id = ?",
+        (datetime.now().isoformat(), id_produto)
+    )
+    conn.commit()
+    conn.close()

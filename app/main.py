@@ -32,6 +32,12 @@ def main(page: ft.Page):
     rota_para_modulo = {f"/{mod}": mod for mod, _ in modulos}
     rota_para_modulo["/cadastrar-produto"] = "cadastrar-produto"
     rota_para_modulo["/editar-produto"] = "editar-produto"
+    rota_para_modulo["/categorias"] = "categorias"
+    rota_para_modulo["/unidades"] = "unidades"
+    rota_para_modulo["/cadastrar-categoria"] = "cadastrar-categoria"
+    rota_para_modulo["/editar-categoria"] = "editar-categoria"
+    rota_para_modulo["/cadastrar-unidade"] = "cadastrar-unidade"      # ✅ Adicionado
+    rota_para_modulo["/editar-unidade"] = "editar-unidade"            # ✅ Adicionado
 
     menu_refs = {}
     menu_botoes = []
@@ -59,7 +65,11 @@ def main(page: ft.Page):
 
     def criar_botao(modulo, icone):
         tema = obter_tema()
-        nome_formatado = "PDV" if modulo == "pdv" else modulo.replace("-", " ").title()
+        nome_formatado = (
+            "PDV" if modulo == "pdv"
+            else "Configurações" if modulo == "configuracoes"
+            else modulo.replace("-", " ").title()
+        )
 
         botao = ft.Container(
             content=ft.TextButton(
@@ -87,7 +97,7 @@ def main(page: ft.Page):
 
         botoes_menu = [
             criar_botao(mod, ico)
-            for mod, ico in modulos[:-1]  # Todos menos o último ("configuracoes")
+            for mod, ico in modulos[:-1]
         ]
         botao_configuracoes = criar_botao(modulos[-1][0], modulos[-1][1])
 
