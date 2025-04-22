@@ -41,6 +41,13 @@ def configuracoes_view(page: ft.Page, atualizar_interface):
                     on_click=lambda _: ir_para("unidades"),
                     bgcolor=tema["botao_menu"],
                     color=tema["texto"]
+                ),
+                ft.ElevatedButton(
+                    text="Motivos de Movimentação",
+                    icon=ft.icons.MOVE_DOWN_ROUNDED,
+                    on_click=lambda _: ir_para("motivos"),
+                    bgcolor=tema["botao_menu"],
+                    color=tema["texto"]
                 )
             ])
         ],

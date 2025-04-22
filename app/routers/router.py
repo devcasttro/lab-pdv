@@ -7,6 +7,9 @@ from views.cadastro_categoria_view import cadastro_categoria_view
 from views.cadastro_unidade_view import cadastro_unidade_view
 from views.categorias_view import categorias_view
 from views.unidades_view import unidades_view
+from views.motivos_view import motivos_view
+from views.cadastro_motivo_view import cadastro_motivo_view
+from models.motivo_model import buscar_motivo_por_id
 from models.produto_model import buscar_produto_por_id
 from models.categoria_model import listar_categorias
 from models.unidade_model import listar_unidades
@@ -103,6 +106,34 @@ def carregar_modulo(modulo, page, atualizar_interface=None):
 
     if modulo == "configuracoes":
         return configuracoes_view(page, atualizar_interface)
+
+    if modulo == "motivos":
+        return motivos_view(page)
+
+    if modulo == "cadastrar-motivo":
+        return cadastro_motivo_view(
+            page,
+            ao_cancelar=lambda e: page.go("/motivos"),
+            ao_salvar=lambda e: page.go("/motivos")
+        )
+
+    if modulo == "editar-motivo":
+        query = page.route.split("?")
+        id_motivo = None
+        if len(query) > 1:
+            params = query[1].split("&")
+            for param in params:
+                if param.startswith("id="):
+                    id_motivo = param.split("=")[1]
+
+        motivo = buscar_motivo_por_id(id_motivo) if id_motivo else None
+
+        return cadastro_motivo_view(
+            page,
+            ao_cancelar=lambda e: page.go("/motivos"),
+            ao_salvar=lambda e: page.go("/motivos"),
+            motivo=motivo
+        )
 
     return lambda: page.add(
         ft.Text(f"Módulo '{modulo}' não implementado.", size=20, color="red")

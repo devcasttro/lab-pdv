@@ -36,8 +36,11 @@ def main(page: ft.Page):
     rota_para_modulo["/unidades"] = "unidades"
     rota_para_modulo["/cadastrar-categoria"] = "cadastrar-categoria"
     rota_para_modulo["/editar-categoria"] = "editar-categoria"
-    rota_para_modulo["/cadastrar-unidade"] = "cadastrar-unidade"      # ✅ Adicionado
-    rota_para_modulo["/editar-unidade"] = "editar-unidade"            # ✅ Adicionado
+    rota_para_modulo["/cadastrar-unidade"] = "cadastrar-unidade"      
+    rota_para_modulo["/editar-unidade"] = "editar-unidade"         
+    rota_para_modulo["/motivos"] = "motivos"
+    rota_para_modulo["/cadastrar-motivo"] = "cadastrar-motivo"
+    rota_para_modulo["/editar-motivo"] = "editar-motivo"
 
     menu_refs = {}
     menu_botoes = []
