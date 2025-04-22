@@ -1,4 +1,5 @@
 import os
+import uuid
 import shutil
 import flet as ft
 from services.theme_service import get_theme_colors
@@ -55,7 +56,7 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: dict =
         value="Ativo" if not produto or produto["ativo"] else "Inativo"
     )
 
-    imagem_default = "assets/imagens_produtos/sem_foto.png"
+    imagem_default = "app/assets/imagens_produtos/sem_foto.png"
     imagem_path = ft.TextField(visible=False, value=produto["imagem_path"] if produto else "")
     imagem_exibida = ft.Image(
         src=produto["imagem_path"] if produto and produto.get("imagem_path") else imagem_default,
@@ -79,11 +80,10 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: dict =
         if e.files:
             arquivo = e.files[0]
             origem = arquivo.path
-            nome_destino = os.path.basename(origem)
-            destino = os.path.join("assets", "imagens_produtos", nome_destino)
+            nome_unico = f"{uuid.uuid4().hex}_{os.path.basename(origem)}"
+            destino = os.path.join("app", "assets", "imagens_produtos", nome_unico)
 
             try:
-                os.makedirs("assets/imagens_produtos", exist_ok=True)
                 shutil.copy(origem, destino)
                 imagem_path.value = destino.replace("\\", "/")
                 imagem_exibida.src = imagem_path.value
@@ -97,7 +97,12 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: dict =
 
     def remover_imagem():
         caminho = imagem_path.value.strip()
-        if caminho and os.path.exists(caminho) and "sem_foto.png" not in caminho:
+        if (
+            caminho
+            and os.path.exists(caminho)
+            and "sem_foto.png" not in caminho
+            and "app/assets/imagens_produtos/" in caminho.replace("\\", "/")
+        ):
             try:
                 os.remove(caminho)
             except Exception as err:
@@ -206,7 +211,8 @@ def cadastro_produto_view(page: ft.Page, ao_cancelar, ao_salvar, produto: dict =
                 on_click=lambda _: picker.pick_files(allow_multiple=False)
             )
         ], spacing=10),
-        ft.Row([imagem_exibida, imagem_path, botao_remover_imagem], spacing=10),
+        ft.Row([imagem_exibida, botao_remover_imagem], spacing=10),
+        ft.Container(visible=False, content=imagem_path),
 
         erro,
         ft.Divider(),
