@@ -1,6 +1,7 @@
 from .connection import conectar
 from datetime import datetime
 import uuid
+import hashlib
 
 def criar_tabelas():
     conn = conectar()
@@ -41,8 +42,6 @@ def criar_tabelas():
         atualizado_em TEXT DEFAULT CURRENT_TIMESTAMP
     )
     """)
-
-    # Inserção inicial (apenas se vazio)
     cursor.execute("SELECT COUNT(*) FROM categorias")
     if cursor.fetchone()[0] == 0:
         categorias_iniciais = [
@@ -70,8 +69,6 @@ def criar_tabelas():
         atualizado_em TEXT DEFAULT CURRENT_TIMESTAMP
     )
     """)
-
-    # Inserção inicial (apenas se vazio)
     cursor.execute("SELECT COUNT(*) FROM unidades")
     if cursor.fetchone()[0] == 0:
         unidades_iniciais = [
@@ -86,6 +83,39 @@ def criar_tabelas():
                 INSERT INTO unidades (id, nome, tag, ativo, criado_em, atualizado_em)
                 VALUES (?, ?, ?, 1, ?, ?)
             """, (str(uuid.uuid4()), nome, tag, datetime.now().isoformat(), datetime.now().isoformat()))
+
+    # -----------------------
+    # Tabela: usuarios
+    # -----------------------
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id TEXT PRIMARY KEY,
+        nome TEXT NOT NULL,
+        email TEXT UNIQUE,
+        login TEXT NOT NULL UNIQUE,
+        senha_hash TEXT NOT NULL,
+        status INTEGER DEFAULT 1,
+        ultimo_acesso TEXT,
+        criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+        atualizado_em TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    # Garante que o usuário de suporte será criado se não existir
+    cursor.execute("SELECT 1 FROM usuarios WHERE login = 'suporte'")
+    if not cursor.fetchone():
+        suporte_id = str(uuid.uuid4())
+        nome = "Suporte Lab"
+        email = "suporte@labdoanalista.com.br"
+        login = "suporte"
+        senha = "Suporte@lab!131"
+        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+        agora = datetime.now().isoformat()
+
+        cursor.execute("""
+            INSERT INTO usuarios (id, nome, email, login, senha_hash, status, criado_em, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+        """, (suporte_id, nome, email, login, senha_hash, agora, agora))
 
     conn.commit()
     conn.close()

@@ -9,10 +9,13 @@ from views.categorias_view import categorias_view
 from views.unidades_view import unidades_view
 from views.motivos_view import motivos_view
 from views.cadastro_motivo_view import cadastro_motivo_view
+from views.usuarios_view import usuarios_view
+from views.cadastro_usuario_view import cadastro_usuario_view
 from models.motivo_model import buscar_motivo_por_id
 from models.produto_model import buscar_produto_por_id
 from models.categoria_model import listar_categorias
 from models.unidade_model import listar_unidades
+from models.usuario_model import buscar_usuario_por_id
 
 def carregar_modulo(modulo, page, atualizar_interface=None):
     print(f"[router] Carregando módulo: {modulo}")
@@ -134,6 +137,35 @@ def carregar_modulo(modulo, page, atualizar_interface=None):
             ao_salvar=lambda e: page.go("/motivos"),
             motivo=motivo
         )
+    
+    if modulo == "usuarios":
+        return usuarios_view(page)
+
+    if modulo == "cadastrar-usuario":
+        return cadastro_usuario_view(
+            page,
+            ao_cancelar=lambda e: page.go("/usuarios"),
+            ao_salvar=lambda e: page.go("/usuarios")
+        )
+
+    if modulo == "editar-usuario":
+        query = page.route.split("?")
+        id_usuario = None
+        if len(query) > 1:
+            params = query[1].split("&")
+            for param in params:
+                if param.startswith("id="):
+                    id_usuario = param.split("=")[1]
+
+        usuario = buscar_usuario_por_id(id_usuario) if id_usuario else None
+
+        return cadastro_usuario_view(
+            page,
+            ao_cancelar=lambda e: page.go("/usuarios"),
+            ao_salvar=lambda e: page.go("/usuarios"),
+            usuario=usuario
+        )
+
 
     return lambda: page.add(
         ft.Text(f"Módulo '{modulo}' não implementado.", size=20, color="red")

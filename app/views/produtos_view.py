@@ -87,7 +87,7 @@ def produtos_view(page: ft.Page, content_area=None, atualizar_interface=None):
             tipo="confirmacao",
             on_confirmar=excluir_produto,
             on_cancelar=cancelar,
-            texto_confirmar="Excluir",
+            texto_confirmar="Inativar",
             texto_cancelar="Cancelar"
         )
 
@@ -108,7 +108,11 @@ def produtos_view(page: ft.Page, content_area=None, atualizar_interface=None):
                 ft.Text(f"R$ {p['preco']:.2f}", expand=1),
                 ft.Text(f"{p['margem_lucro']}%", expand=1),
                 ft.Text(p.get("unidade", "-"), expand=1),
-                ft.Text("Ativo" if p.get("ativo") else "Inativo", expand=1),
+                ft.Text(
+                    "Ativo" if p.get("ativo") else "Inativo",
+                    expand=1,
+                    color=tema["botao_verde"] if p.get("ativo") else tema["botao_vermelho"]
+                ),
                 ft.Row([
                     ft.IconButton(
                         icon=ft.Icons.EDIT,

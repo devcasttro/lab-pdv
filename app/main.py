@@ -22,6 +22,7 @@ def main(page: ft.Page):
         ("produtos", "📦"),
         ("estoque", "🏷️"),
         ("clientes", "👤"),
+        ("usuarios", "👥"),
         ("fornecedores", "🚚"),
         ("contas-pagar", "📤"),
         ("contas-receber", "📥"),
@@ -41,6 +42,9 @@ def main(page: ft.Page):
     rota_para_modulo["/motivos"] = "motivos"
     rota_para_modulo["/cadastrar-motivo"] = "cadastrar-motivo"
     rota_para_modulo["/editar-motivo"] = "editar-motivo"
+    rota_para_modulo["/usuarios"] = "usuarios"
+    rota_para_modulo["/cadastrar-usuario"] = "cadastrar-usuario"
+    rota_para_modulo["/editar-usuario"] = "editar-usuario"
 
     menu_refs = {}
     menu_botoes = []
